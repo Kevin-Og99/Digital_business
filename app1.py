@@ -1,10 +1,16 @@
-
 import streamlit as st
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 import numpy as np
 
 # Configuration de la page
+st.set_page_config(
+    page_title="Simulateur Prédictif - Transformation Digitale",
+    page_icon="📊",
+    layout="centered"
+)
+
+# Message d'accueil stylisé
 st.markdown(
     "<h1 style='text-align: center; color: #2C3E50;'>📊 Simulateur Prédictif d'Investissement Digital</h1>",
     unsafe_allow_html=True
@@ -45,3 +51,4 @@ else:
 
     prediction = model.predict(np.array([[employees_input, profits_input, debt_input]]))[0]
     st.success(f"💰 Revenu prévisionnel estimé : **{prediction:,.0f} $**")
+
