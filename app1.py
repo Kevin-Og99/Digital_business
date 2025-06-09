@@ -25,30 +25,26 @@ st.markdown(
 df = pd.read_csv("Dataset.csv")
 
 # Nettoyage des colonnes nécessaires
-df = df.dropna(subset=['continent', 'sector', 'employees', 'revenues', 'profits', 'debt'])
+df = df.dropna(subset=['continent', 'sector', 'employees', 'revenues'])
 df['employees'] = df['employees'].astype(float)
 df['revenues'] = df['revenues'].astype(float)
-df['profits'] = df['profits'].astype(float)
-df['debt'] = df['debt'].astype(float)
 
 # Sélections utilisateur
 st.sidebar.header("🔧 Paramètres de simulation")
 continent = st.sidebar.selectbox("🌍 Choisissez un continent", sorted(df['continent'].unique()))
 sector = st.sidebar.selectbox("🏭 Choisissez un secteur", sorted(df[df['continent'] == continent]['sector'].unique()))
-employees_input = st.sidebar.slider("👥 Nombre d'employés", 10, 5000, 100, step=10)
-profits_input = st.sidebar.number_input("📈 Profits estimés ($)", min_value=0.0, value=100000.0, step=10000.0)
-debt_input = st.sidebar.number_input("📉 Dettes estimées ($)", min_value=0.0, value=50000.0, step=10000.0)
+employees_input = st.sidebar.slider("👥 Nombre d'employés", 5, 5000, 100, step=5)
+sector_input = st.sidebar.slider("👥 Nombre de secteurs", 1, 17, 10, step=1)
 
 # Filtrage pour modèle
 filtered = df[(df['continent'] == continent) & (df['sector'] == sector)]
-
-if filtered.shape[0] < 10:
+if filtered.shape[0] < 5:
     st.warning("❗ Pas assez de données pour entraîner une prédiction fiable pour cette combinaison.")
 else:
-    X = filtered[['employees', 'profits', 'debt']]
+    X = filtered[['employees', 'sector ']]
     y = filtered['revenues']
     model = LinearRegression()
     model.fit(X, y)
 
-    prediction = model.predict(np.array([[employees_input, profits_input, debt_input]]))[0]
+    prediction = model.predict(np.array([[employees_input, sector_input]]))[0]
     st.success(f"💰 Revenu prévisionnel estimé : **{prediction:,.0f} $**")
